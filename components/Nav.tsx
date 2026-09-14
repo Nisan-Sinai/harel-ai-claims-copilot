@@ -6,8 +6,24 @@ import { useEffect, useState } from "react";
 export function Nav(){
   const [en,setEn]=useState(false);
   const [open,setOpen]=useState(false);
-  useEffect(()=>{const saved=localStorage.getItem("claims-locale")==="en";setEn(saved);document.documentElement.lang=saved?"en":"he";document.documentElement.dir=saved?"ltr":"rtl"},[]);
-  function toggle(){const next=!en;setEn(next);localStorage.setItem("claims-locale",next?"en":"he");document.documentElement.lang=next?"en":"he";document.documentElement.dir=next?"ltr":"rtl";window.dispatchEvent(new CustomEvent("claims-locale",{detail:next?"en":"he"}))}
+
+  useEffect(()=>{
+    const saved=localStorage.getItem("claims-locale")==="en";
+    document.documentElement.lang=saved?"en":"he";
+    document.documentElement.dir=saved?"ltr":"rtl";
+    const timer=window.setTimeout(()=>setEn(saved),0);
+    return ()=>window.clearTimeout(timer);
+  },[]);
+
+  function toggle(){
+    const next=!en;
+    setEn(next);
+    localStorage.setItem("claims-locale",next?"en":"he");
+    document.documentElement.lang=next?"en":"he";
+    document.documentElement.dir=next?"ltr":"rtl";
+    window.dispatchEvent(new CustomEvent("claims-locale",{detail:next?"en":"he"}));
+  }
+
   return <>
     <div className="utility-bar"><div><span>{en?"Insurance company digital services":"השירותים הדיגיטליים של חברת הביטוח"}</span><span className="utility-dot">•</span><span>{en?"24/7 digital claims":"תביעות דיגיטליות 24/7"}</span></div><div><ShieldCheck size={14}/><span>{en?"Secure service":"שירות מאובטח"}</span></div></div>
     <header className="nav insurance-nav">
