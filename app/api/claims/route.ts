@@ -3,5 +3,28 @@ import { createClaimSchema } from "@/lib/schema";
 import { analyzeWithAI } from "@/lib/gemini";
 import { getServerSupabase } from "@/lib/supabase";
 export const dynamic = "force-dynamic";
-export async function GET(){const supabase=getServerSupabase();if(!supabase)return NextResponse.json({claims:[],mode:"unconfigured"});const {data,error}=await supabase.from("claims").select("*").order("created_at",{ascending:false}).limit(50);if(error)return NextResponse.json({error:error.message},{status:500});return NextResponse.json({claims:data??[],mode:"supabase"});}
-export async function POST(request:Request){try{const input=createClaimSchema.parse(await request.json());const result=await analyzeWithAI(input.description);const supabase=getServerSupabase();if(!supabase)return NextResponse.json({claim:{id:`demo-${Date.now()}`,description:input.description,analysis:result.analysis,ai_provider:result.provider,model:result.model,status:"needs_review",reviewer_notes:null,reviewed_at:null,created_at:new Date().toISOString(),updated_at:new Date().toISOString()},persisted:false},{status:201});const {data,error}=await supabase.from("claims").insert({description:input.description,analysis:result.analysis,ai_provider:result.provider,model:result.model,status:"needs_review"}).select("*").single();if(error)throw error;return NextResponse.json({claim:data,persisted:true},{status:201});}catch(error){return NextResponse.json({error:error instanceof Error?error.message:"Unknown error"},{status:400});}}
+
+export async function GET() {
+  const supabase = getServerSupabase();
+  const { data, error } = await supabase.rpc("list_claims");
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ claims: data ?? [], mode: "supabase" });
+}
+
+export async function POST(request: Request) {
+  try {
+    const input = createClaimSchema.parse(await request.json());
+    const result = await analyzeWithAI(input.description);
+    const supabase = getServerSupabase();
+    const { data, error } = await supabase.rpc("create_claim", {
+      p_description: input.description,
+      p_analysis: result.analysis,
+      p_ai_provider: result.provider,
+      p_model: result.model
+    });
+    if (error) throw error;
+    return NextResponse.json({ claim: Array.isArray(data) ? data[0] : data, persisted: true }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 400 });
+  }
+}
