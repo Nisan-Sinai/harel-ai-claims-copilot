@@ -1,11 +1,26 @@
 "use client";
 import Link from "next/link";
-import { BrainCircuit, Languages, ShieldCheck } from "lucide-react";
+import { Languages, Menu, ShieldCheck, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function Nav(){
   const [en,setEn]=useState(false);
+  const [open,setOpen]=useState(false);
   useEffect(()=>{const saved=localStorage.getItem("claims-locale")==="en";setEn(saved);document.documentElement.lang=saved?"en":"he";document.documentElement.dir=saved?"ltr":"rtl"},[]);
   function toggle(){const next=!en;setEn(next);localStorage.setItem("claims-locale",next?"en":"he");document.documentElement.lang=next?"en":"he";document.documentElement.dir=next?"ltr":"rtl";window.dispatchEvent(new CustomEvent("claims-locale",{detail:next?"en":"he"}))}
-  return <header className="nav"><Link className="brand" href="/" aria-label="Insurance AI Claims Copilot"><span className="brand-mark"><BrainCircuit size={22}/></span><span><b>Claims Copilot</b><small>{en?"Insurance Company · AI workspace":"חברת ביטוח · סביבת AI"}</small></span></Link><nav aria-label={en?"Main navigation":"ניווט ראשי"}><Link href="/">{en?"Analyze":"ניתוח"}</Link><Link href="/dashboard">{en?"Dashboard":"לוח בקרה"}</Link><Link href="/architecture">{en?"Architecture":"ארכיטקטורה"}</Link><button className="nav-tool" onClick={toggle} aria-label={en?"Switch to Hebrew":"Switch to English"}><Languages size={16}/>{en?"עברית":"EN"}</button><span className="secure-pill"><ShieldCheck size={14}/>{en?"Human reviewed":"בקרת אדם"}</span></nav></header>
+  return <>
+    <div className="utility-bar"><div><span>{en?"Insurance company digital services":"השירותים הדיגיטליים של חברת הביטוח"}</span><span className="utility-dot">•</span><span>{en?"24/7 digital claims":"תביעות דיגיטליות 24/7"}</span></div><div><ShieldCheck size={14}/><span>{en?"Secure service":"שירות מאובטח"}</span></div></div>
+    <header className="nav insurance-nav">
+      <Link className="brand insurance-brand" href="/" aria-label={en?"Insurance Company home":"דף הבית חברת ביטוח"}><span className="brand-symbol">ב</span><span><b>{en?"Insurance Company":"חברת ביטוח"}</b><small>{en?"Protection. Service. Innovation.":"הגנה · שירות · חדשנות"}</small></span></Link>
+      <button className="mobile-menu" onClick={()=>setOpen(!open)} aria-expanded={open} aria-label={en?"Open menu":"פתח תפריט"}><Menu size={22}/></button>
+      <nav className={open?"main-menu open":"main-menu"} aria-label={en?"Main navigation":"ניווט ראשי"}>
+        <Link href="/#products">{en?"Insurance":"ביטוחים"}</Link>
+        <Link href="/#demo">{en?"Claims":"תביעות"}</Link>
+        <Link href="/dashboard">{en?"Claims center":"מרכז תביעות"}</Link>
+        <Link href="/architecture">{en?"Technology":"טכנולוגיה"}</Link>
+        <Link href="/privacy">{en?"Service":"שירות ומידע"}</Link>
+      </nav>
+      <div className="nav-actions"><button className="nav-tool" onClick={toggle}><Languages size={16}/>{en?"עברית":"EN"}</button><Link className="personal-area" href="/dashboard"><UserRound size={17}/>{en?"Personal area":"אזור אישי"}</Link></div>
+    </header>
+  </>
 }
