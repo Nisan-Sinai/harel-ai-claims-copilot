@@ -1,0 +1,2 @@
+import Link from "next/link"; import { BrainCircuit } from "lucide-react";
+export function Nav(){return <header className="nav"><Link className="brand" href="/"><span className="brand-mark"><BrainCircuit size={22}/></span><span><b>Claims Copilot</b><small>AI insurance intake demo</small></span></Link><nav><Link href="/">Analyze</Link><Link href="/dashboard">Dashboard</Link><Link href="/architecture">Architecture</Link></nav></header>}

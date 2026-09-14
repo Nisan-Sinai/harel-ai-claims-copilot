@@ -1,0 +1,2 @@
+import { NextResponse } from "next/server"; import { getServerSupabase } from "@/lib/supabase";
+export async function GET(){const supabase=getServerSupabase();let database="unconfigured";if(supabase){const {error}=await supabase.from("claims").select("id").limit(1);database=error?"error":"ok";}return NextResponse.json({status:database==="error"?"degraded":"ok",database,ai:process.env.GEMINI_API_KEY?"gemini":"demo-fallback",timestamp:new Date().toISOString()});}
