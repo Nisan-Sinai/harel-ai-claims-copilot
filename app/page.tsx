@@ -1,3 +1,35 @@
-import { ArrowDown, BrainCircuit, DatabaseZap, FileCheck2, Gauge, ScanSearch, ShieldCheck, Sparkles, Workflow } from "lucide-react";
+import { ArrowLeft, BadgeCheck, BrainCircuit, Car, ChevronLeft, HeartPulse, Home as HomeIcon, Plane, ShieldCheck, Sparkles, Umbrella, UserRoundCheck } from "lucide-react";
 import { ClaimAnalyzer } from "@/components/ClaimAnalyzer";
-export default function Home(){return <><section className="hero"><div className="hero-copy"><span className="badge"><Sparkles size={14}/> INSURANCE INTELLIGENCE WORKSPACE</span><h1>מתיאור חופשי לתיק תביעה <span>חכם, מובנה ומוכן לבדיקה.</span></h1><p>Copilot לחברת ביטוח שמחלץ עובדות, מזהה מידע חסר, מדרג דחיפות ומייצר מסלול עבודה ברור — תוך שמירת אדם בלולאת ההחלטה.</p><a className="text-link" href="#demo">נסה תרחיש פיקטיבי <ArrowDown size={16}/></a><div className="trust-row"><span><ShieldCheck size={15}/> Human-in-the-loop</span><span><FileCheck2 size={15}/> Schema validated</span><span><BrainCircuit size={15}/> Gemini AI</span></div></div><div className="hero-card glass"><div className="signal"><span className="pulse"/>AI workspace online</div><div className="flow-step"><span>01</span><div><b>קליטת אירוע</b><small>טקסט טבעי ולא מובנה</small></div></div><div className="flow-line"/><div className="flow-step"><span>02</span><div><b>AI extraction</b><small>עובדות · ישויות · חוסרים · דחיפות</small></div></div><div className="flow-line"/><div className="flow-step"><span>03</span><div><b>Validation & persistence</b><small>Zod · Supabase · audit trail</small></div></div><div className="flow-line"/><div className="flow-step"><span>04</span><div><b>Human review</b><small>אישור או תיקון לפני המשך</small></div></div></div></section><section className="feature-strip"><div><ScanSearch/><span><b>Smart extraction</b><small>הופך טקסט לנתונים מובנים</small></span></div><div><Gauge/><span><b>Triage signals</b><small>דחיפות וסימני סיכון לבדיקה בלבד</small></span></div><div><DatabaseZap/><span><b>Audit-ready</b><small>היסטוריה מלאה ב‑PostgreSQL</small></span></div><div><Workflow/><span><b>Human control</b><small>AI מסייע — אדם מחליט</small></span></div></section><section className="story-grid"><article className="glass"><span className="eyebrow">WHY IT MATTERS</span><h2>פחות קריאה ידנית. יותר הקשר.</h2><p>במקום לפתוח טקסט ארוך ולחפש מה חסר, המערכת מציגה מיד תמונת מצב מובנית ומאפשרת לבודק להתמקד בשיקול דעת אנושי.</p></article><article className="glass"><span className="eyebrow">SAFE AI</span><h2>לא מנוע החלטות אוטומטי.</h2><p>אין קביעה אוטומטית של כיסוי, אחריות, הונאה או פיצוי. כל signal הוא כלי triage בלבד ודורש בדיקה אנושית.</p></article></section><section id="demo" className="demo"><div className="section-heading"><span className="eyebrow">LIVE AI DEMO</span><h2>נתח תביעה פיקטיבית</h2><p>נסה תאונת רכב, נזק דירה או אירוע אחר. אין להזין מידע אמיתי או רגיש.</p></div><ClaimAnalyzer/></section></>}
+
+const products=[
+  {icon:Car,title:"ביטוח רכב",text:"כיסוי מקיף, צד ג׳ ושירותים דיגיטליים לדרך."},
+  {icon:HomeIcon,title:"ביטוח דירה",text:"הגנה למבנה, לתכולה ולמה שחשוב בבית."},
+  {icon:HeartPulse,title:"ביטוח בריאות",text:"כלים ושירותים שמסייעים להיות מוכנים כשצריך."},
+  {icon:Plane,title:"ביטוח נסיעות",text:"יוצאים לחו״ל עם מעטפת דיגיטלית זמינה מכל מקום."}
+];
+
+export default function Home(){return <>
+  <section className="insurance-hero">
+    <div className="insurance-hero-copy">
+      <span className="insurance-kicker"><BadgeCheck size={16}/> חברת ביטוח דיגיטלית</span>
+      <h1>ביטוח שמרגיש <span>פשוט, ברור ואנושי.</span></h1>
+      <p>מנהלים ביטוחים, שירות ותביעות במקום אחד. כשצריך לדווח על אירוע, עוזר AI מסייע לאסוף את הפרטים בצורה מסודרת — וההחלטה נשארת בידי איש מקצוע.</p>
+      <div className="hero-actions"><a className="insurance-primary" href="#demo">דיווח על תביעה <ArrowLeft size={18}/></a><a className="insurance-secondary" href="#products">לכל הביטוחים</a></div>
+      <div className="insurance-trust"><span><ShieldCheck size={17}/> מידע פיקטיבי בדמו</span><span><UserRoundCheck size={17}/> בקרה אנושית</span><span><BrainCircuit size={17}/> AI מסייע בלבד</span></div>
+    </div>
+    <aside className="claim-shortcut" aria-label="קיצור דרך לתביעות">
+      <span className="shortcut-icon"><Sparkles size={25}/></span><small>מרכז התביעות החכם</small><h2>קרה משהו?</h2><p>מתארים את האירוע במילים שלכם ומקבלים טופס מסודר לבדיקה תוך שניות.</p><a href="#demo">מתחילים דיווח <ChevronLeft size={18}/></a>
+      <div className="shortcut-status"><span className="status-dot"/> השירות הדיגיטלי פעיל</div>
+    </aside>
+  </section>
+
+  <section className="service-bar" aria-label="שירותים מהירים"><a href="#demo"><b>הגשת תביעה</b><span>דיווח דיגיטלי מהיר</span></a><a href="/dashboard"><b>מעקב תביעות</b><span>סטטוס והיסטוריה</span></a><a href="/privacy"><b>מידע ושירות</b><span>פרטיות ונגישות</span></a><a href="/architecture"><b>חדשנות ב‑AI</b><span>איך המערכת עובדת</span></a></section>
+
+  <section id="products" className="products-section"><div className="section-intro"><span>הביטוחים שלנו</span><h2>מעטפת ביטוחית לחיים עצמם</h2><p>ממשק הדגמה המדמה חוויית שירות של חברת ביטוח מודרנית.</p></div><div className="product-grid">{products.map(({icon:Icon,title,text})=><article className="product-card" key={title}><span className="product-icon"><Icon size={25}/></span><h3>{title}</h3><p>{text}</p><a href="#demo">למידע נוסף <ChevronLeft size={16}/></a></article>)}</div></section>
+
+  <section className="why-section"><div><span className="insurance-kicker">שירות דיגיטלי מתקדם</span><h2>פחות טפסים. יותר הבנה.</h2><p>המערכת מחלצת מתוך תיאור חופשי את סוג האירוע, המידע החסר, המסמכים המומלצים ורמת הדחיפות — כדי להכין את התיק לבדיקה מקצועית.</p></div><div className="why-points"><article><b>01</b><span><strong>קליטה חכמה</strong><small>טקסט חופשי הופך לנתונים מובנים</small></span></article><article><b>02</b><span><strong>בדיקת שלמות</strong><small>זיהוי מידע ומסמכים שחסרים בתיק</small></span></article><article><b>03</b><span><strong>בקרת אדם</strong><small>אין החלטת כיסוי או פיצוי אוטומטית</small></span></article></div></section>
+
+  <section id="demo" className="demo insurance-demo"><div className="section-heading"><span className="eyebrow">מרכז התביעות הדיגיטלי</span><h2>דיווח חכם על אירוע ביטוחי</h2><p>זהו דמו בלבד. השתמשו בפרטים פיקטיביים ולא במידע אמיתי או רגיש.</p></div><ClaimAnalyzer/></section>
+
+  <section className="insurance-note"><Umbrella size={24}/><div><b>חשוב לדעת</b><p>המערכת היא כלי עזר לקליטת תביעה ולסידור מידע. היא אינה מחליטה על כיסוי ביטוחי, אחריות, חשד להונאה או גובה פיצוי.</p></div></section>
+</>}
