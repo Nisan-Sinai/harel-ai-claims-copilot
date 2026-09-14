@@ -1,2 +1,28 @@
-import { NextResponse } from "next/server"; import { getServerSupabase } from "@/lib/supabase";
-export async function GET(){const supabase=getServerSupabase();let database="unconfigured";if(supabase){const {error}=await supabase.from("claims").select("id").limit(1);database=error?"error":"ok";}return NextResponse.json({status:database==="error"?"degraded":"ok",database,ai:process.env.GEMINI_API_KEY?"gemini":"demo-fallback",timestamp:new Date().toISOString()});}
+import { NextResponse } from "next/server";
+import { getServerSupabase } from "@/lib/supabase";
+
+export async function GET() {
+  try {
+    const supabase = getServerSupabase();
+    const { error } = await supabase.rpc("list_claims");
+    const database = error ? "error" : "ok";
+
+    return NextResponse.json({
+      status: database === "error" ? "degraded" : "ok",
+      database,
+      ai: process.env.GEMINI_API_KEY?.trim() ? "gemini" : "demo-fallback",
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error("Health check failed", error);
+    return NextResponse.json(
+      {
+        status: "degraded",
+        database: "error",
+        ai: process.env.GEMINI_API_KEY?.trim() ? "gemini" : "demo-fallback",
+        timestamp: new Date().toISOString()
+      },
+      { status: 503 }
+    );
+  }
+}
