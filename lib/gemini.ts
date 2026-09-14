@@ -66,6 +66,10 @@ async function requestGemini(apiKey: string, model: string, description: string)
   );
 }
 
+function shouldTryNextModel(status: number) {
+  return status === 404 || status === 408 || status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+}
+
 export async function analyzeWithAI(description: string): Promise<{ analysis: ClaimAnalysis; provider: string; model: string }> {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) {
@@ -76,33 +80,41 @@ export async function analyzeWithAI(description: string): Promise<{ analysis: Cl
   let lastError = "Gemini request failed";
 
   for (const model of models) {
-    const response = await requestGemini(apiKey, model, description);
-
-    if (!response.ok) {
-      const body = await response.text().catch(() => "");
-      lastError = `Gemini ${model} failed with ${response.status}`;
-      console.error(lastError, body.slice(0, 500));
-
-      if (response.status === 404) continue;
-      throw new Error(lastError);
-    }
-
-    const payload = await response.json();
-    const text = payload?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) {
-      lastError = `Gemini ${model} returned no structured content`;
-      console.error(lastError);
-      continue;
-    }
-
     try {
-      const analysis = claimAnalysisSchema.parse(JSON.parse(text));
-      return { analysis, provider: "google-gemini", model };
+      const response = await requestGemini(apiKey, model, description);
+
+      if (!response.ok) {
+        const body = await response.text().catch(() => "");
+        lastError = `Gemini ${model} failed with ${response.status}`;
+        console.error(lastError, body.slice(0, 500));
+
+        if (shouldTryNextModel(response.status)) continue;
+        throw new Error(lastError);
+      }
+
+      const payload = await response.json();
+      const text = payload?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        lastError = `Gemini ${model} returned no structured content`;
+        console.error(lastError);
+        continue;
+      }
+
+      try {
+        const analysis = claimAnalysisSchema.parse(JSON.parse(text));
+        return { analysis, provider: "google-gemini", model };
+      } catch (error) {
+        lastError = `Gemini ${model} returned invalid structured content`;
+        console.error(lastError, error);
+      }
     } catch (error) {
-      lastError = `Gemini ${model} returned invalid structured content`;
+      if (error instanceof Error && error.message === lastError) throw error;
+      lastError = `Gemini ${model} network request failed`;
       console.error(lastError, error);
+      continue;
     }
   }
 
-  throw new Error(lastError);
+  console.warn("All Gemini candidates failed; using deterministic demo fallback");
+  return { analysis: analyzeDemo(description), provider: "demo", model: "deterministic-fallback" };
 }
