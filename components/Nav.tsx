@@ -36,7 +36,7 @@ export function Nav(){
         <Link href="/architecture">{en?"Technology":"טכנולוגיה"}</Link>
         <Link href="/privacy">{en?"Service":"שירות ומידע"}</Link>
       </nav>
-      <div className="nav-actions"><button className="nav-tool" onClick={toggle}><Languages size={16}/>{en?"עברית":"EN"}</button><Link className="personal-area" href="/dashboard"><UserRound size={17}/>{en?"Personal area":"אזור אישי"}</Link></div>
+      <div className="nav-actions"><button className="nav-tool" aria-label={en?"Switch to Hebrew":"Switch to English"} onClick={toggle}><Languages size={16}/>{en?"עברית":"EN"}</button><Link className="personal-area" href="/dashboard"><UserRound size={17}/>{en?"Personal area":"אזור אישי"}</Link></div>
     </header>
   </>
 }
