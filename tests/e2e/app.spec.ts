@@ -6,15 +6,16 @@ test.describe("Claims Copilot quality gate", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.getByText(/חברת ביטוח|Insurance Company/i).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: /ניתוח|Analyze/i }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /דיווח על תביעה|Report a claim/i }).first()).toBeVisible();
   });
 
   test("language control switches document direction", async ({ page }) => {
     await page.goto("/");
     const languageButton = page.getByRole("button", { name: /Switch to English|Switch to Hebrew/i });
     await expect(languageButton).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
     await languageButton.click();
-    await expect(page.locator("html")).toHaveAttribute("dir", /ltr|rtl/);
+    await expect(page.locator("html")).toHaveAttribute("dir", "ltr");
   });
 
   test("navigation pages are reachable", async ({ page }) => {
