@@ -35,6 +35,7 @@ export function Nav(){
         <Link href="/dashboard">{en?"Claims center":"מרכז תביעות"}</Link>
         <Link href="/architecture">{en?"Technology":"טכנולוגיה"}</Link>
         <Link href="/privacy">{en?"Service":"שירות ומידע"}</Link>
+        <button className="mobile-menu-language" type="button" aria-label={en?"Switch to Hebrew":"Switch to English"} onClick={toggle}><Languages size={16}/>{en?"עברית":"English (EN)"}</button>
       </nav>
       <div className="nav-actions"><button className="nav-tool" aria-label={en?"Switch to Hebrew":"Switch to English"} onClick={toggle}><Languages size={16}/>{en?"עברית":"EN"}</button><Link className="personal-area" href="/dashboard"><UserRound size={17}/>{en?"Personal area":"אזור אישי"}</Link></div>
     </header>
