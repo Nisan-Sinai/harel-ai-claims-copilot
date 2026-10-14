@@ -68,7 +68,6 @@ export function renderInsuranceIcon(size: 192 | 512): ImageResponse {
     {
       width: size,
       height: size,
-      alt: "סמל חברת ביטוח – מגן ומשפחה",
     },
   );
 }
