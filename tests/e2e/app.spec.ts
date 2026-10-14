@@ -11,6 +11,8 @@ test.describe("Claims Copilot quality gate", () => {
 
   test("language control switches document direction", async ({ page }) => {
     await page.goto("/");
+    const mobileMenu = page.getByRole("button", { name: /פתח תפריט|Open menu/i });
+    if (await mobileMenu.isVisible()) await mobileMenu.click();
     const languageButton = page.getByRole("button", { name: /Switch to English|Switch to Hebrew/i });
     await expect(languageButton).toBeVisible();
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
