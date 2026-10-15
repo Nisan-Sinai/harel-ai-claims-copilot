@@ -1,0 +1,53 @@
+name: Managed repository protection
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  statuses: read
+jobs:
+  core:
+    name: Managed / Core CI
+    uses: Nisan-Sinai/github-workflows/.github/workflows/node-ci.yml@1f30dffd2898920d1e57d22547261557f8316171 # main
+    with:
+      package-manager: npm
+      node-version: '22'
+      install-command: npm install --no-audit --no-fund
+      lint-command: npm run lint
+      typecheck-command: npm run typecheck
+      test-command: npm test
+      build-command: ''
+
+  browser:
+    name: Managed / Browser QA
+    uses: Nisan-Sinai/github-workflows/.github/workflows/browser-qa.yml@1f30dffd2898920d1e57d22547261557f8316171 # main
+    with:
+      package-manager: npm
+      node-version: '22'
+      install-command: npm install --no-audit --no-fund
+      browser-install-command: npx playwright install --with-deps chromium
+      build-command: >-
+        NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co
+        SUPABASE_PUBLISHABLE_KEY=sb_publishable_example
+        npm run build
+      e2e-command: >-
+        NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co
+        SUPABASE_PUBLISHABLE_KEY=sb_publishable_example
+        GEMINI_API_KEY=''
+        npm run test:e2e
+
+  security:
+    name: Managed / Security CI
+    uses: Nisan-Sinai/github-workflows/.github/workflows/security-ci.yml@1f30dffd2898920d1e57d22547261557f8316171 # main
+    with:
+      ecosystem: node
+      package-manager: npm
+      audit-command: npm install --package-lock-only --ignore-scripts --no-audit --no-fund && npm audit --omit=dev --audit-level=high
+
+  deployment:
+    name: Managed / Vercel gate
+    if: github.event_name == 'pull_request'
+    uses: Nisan-Sinai/github-workflows/.github/workflows/vercel-gate.yml@1f30dffd2898920d1e57d22547261557f8316171 # main
+    with:
+      contexts-json: '["Vercel"]'
