@@ -1,0 +1,26 @@
+name: Managed repository protection
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  node:
+    name: Managed / Node CI
+    uses: Nisan-Sinai/github-workflows/.github/workflows/node-ci.yml@1f30dffd2898920d1e57d22547261557f8316171 # main
+    with:
+      package-manager: npm
+      node-version: '22'
+      install-command: npm install --no-audit --no-fund
+      lint-command: npm run lint
+      typecheck-command: npm run typecheck
+      test-command: npm test
+      build-command: ''
+  security:
+    name: Managed / Security CI
+    uses: Nisan-Sinai/github-workflows/.github/workflows/security-ci.yml@1f30dffd2898920d1e57d22547261557f8316171 # main
+    with:
+      ecosystem: node
+      package-manager: npm
+      audit-command: npm install --package-lock-only --ignore-scripts --no-audit --no-fund && npm audit --omit=dev --audit-level=high
